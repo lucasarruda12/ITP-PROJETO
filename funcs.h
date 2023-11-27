@@ -1,0 +1,1 @@
+int createTable(int* argc, char* argv[]);
