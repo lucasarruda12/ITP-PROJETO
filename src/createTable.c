@@ -1,13 +1,31 @@
-#include <stdio.h>
-#include <string.h>
 
-#include "funcs.h"
-#include "util.c"
-#include "definitions.h"
+int createTable(char tablename[NAME_SIZE], char tableHeader[200]){
+    char filename[10 + NAME_SIZE + 5];
+    sprintf(filename, "database/%s.txt", tablename);
 
-#define NAME_SIZE 20
+    // CRIAR ARQUIVO .txt
+    FILE *file;
+    if(file = fopen(filename, "w")){
+        fclose(file);
+    } else {
+        printf("Erro ao criar tabela %s\n", tablename);
+        return 1;
+    }
 
-int createTable(){
+    // MODIFICAR ARQUIVO COM O CABEÇELHO DA TABELA
+    if(file = fopen(filename, "a")){
+        fprintf(file, "%s", tableHeader);
+        fclose(file);
+    } else {
+        printf("Erro ao adicionar cabeçalho à tabela %s\n", tablename);
+        return 1;
+    }
+
+    printf("Tabela %s criada com sucesso\n", tablename);
+    return 0;
+}
+
+int createTableUI(){
     // PROMPT AO USUÁRIO
     char tableHeader[200] = {0};
     char tablename[NAME_SIZE + 1] = {0};
@@ -18,11 +36,12 @@ int createTable(){
     print_h_line(40);
 
     printf("Nome da tabela (até %d caracteres): ", NAME_SIZE);
-    getchar();
     fgets(tablename, NAME_SIZE, stdin);
+    tablename[strlen(tablename) - 1] = '\0';
 
     printf("Chave primária (int): ");
     fgets(primaryKey, NAME_SIZE, stdin);
+    primaryKey[strlen(primaryKey) - 1] = '\0';
 
     char primaryKey_type[2] = {'1','='};
     strcat(tableHeader, primaryKey_type);
@@ -55,15 +74,6 @@ int createTable(){
         strcat(tableHeader, columnName);
     }
 
-    // CRIAR ARQUIVO .txt
-    char filename[NAME_SIZE + 5];
-    sprintf(filename, "%s.txt", tablename);
-    FILE *file;
-    file = fopen(filename, "w");
-    fclose(file);
-
-    // MONTAR CABEÇALHO DA TABELA
-    file = fopen(filename, "a");
-    fprintf(file, tableHeader);
-    fclose(file);
+    createTable(tablename, tableHeader);
+    return 0;
 }
