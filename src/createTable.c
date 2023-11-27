@@ -30,6 +30,9 @@ int createTableUI(){
     char tableHeader[200] = {0};
     char tablename[NAME_SIZE + 1] = {0};
     char primaryKey[NAME_SIZE + 1] = {0};
+    char columnName[NAME_SIZE + 1] = {0};
+    int columnType = 0;
+    int choice = 1;
 
     print_h_line(40);
     printf("Menu de criação de tabelas\n");
@@ -48,12 +51,7 @@ int createTableUI(){
     strcat(tableHeader, primaryKey);
 
     // MONTAR COLUNAS
-    int choice = 1;
-
     while(choice){
-        char columnName[NAME_SIZE + 1] = {0};
-        int columnType = 0;
-
         print_h_line(40);
         printf("Nova coluna? (1. sim) (0. não) ");
         scanf("%d", &choice);

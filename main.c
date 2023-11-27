@@ -11,6 +11,7 @@
 
 #include "src/createTable.c"
 #include "src/dropTable.c"
+#include "src/listTables.c"
 
 int main(){
     while(1){
@@ -35,6 +36,9 @@ int main(){
         {
         case 1:
             createTableUI();
+            break;
+        case 2:
+            listTablesUI();
             break;
         case 6:
             dropTableUI();
