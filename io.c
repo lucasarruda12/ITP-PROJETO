@@ -12,9 +12,12 @@ void help(){
     printf("Listar todas as tabelas:\n");
     printf("    l\n");
 
+    printf("Criar uma nova tupla na tabela");
+    printf("    i\n")
+
     printf("Apagar Tabela:\n");
     printf("    d [Nome da Tabela]\n");
 
     printf("Interface de Texto:\n");
-    printf("    i\n");
+    printf("    g\n");
 }
