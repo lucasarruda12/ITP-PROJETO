@@ -23,6 +23,9 @@ int main(int argc, char* argv[]){
     case 'i':
         return insertInto(&argc, argv);
         break;
+    case 'a':
+        return deleteFromTable(&argc, argv);
+        break;
     default:
         help();
         return 0;

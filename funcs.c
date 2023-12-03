@@ -7,6 +7,7 @@
 
 int isTable(char filename[NAME_SIZE]){
     FILE *file;
+    
     if ((file = fopen(filename, "r")) == NULL)
     {
         printf("Não foi possível encontrar a tabela %s\n", filename);
@@ -103,10 +104,10 @@ int dropTable(char tablename[NAME_SIZE + 1]){
     sprintf(filename, "database/%s.txt", tablename);
 
     if(remove(filename) == 0){
-        printf("Tabela %s apagada com sucesso.\n", tablename);
+        printf("Tabela %s apagada com sucesso.\n", filename);
         return 0;
     } else {
-        printf("Erro ao apagar a tabela %s\n", tablename);
+        printf("Erro ao apagar a tabela %s\n", filename);
         return 1;
     }
 }
@@ -156,6 +157,7 @@ int insertInto(int* argc, char* argv[]){
     while(strlen(tableheader) > 1){
         char datatype[15] = {0};
         char fieldname[45] = {0};
+        char new_value[NAME_SIZE] = {0};
         int middle_marker = find_next_marker(tableheader, ')');
         int end_marker = find_next_marker(tableheader, '|');
         if (end_marker == 0) break;
@@ -165,8 +167,6 @@ int insertInto(int* argc, char* argv[]){
         strcpy(tableheader, tableheader + end_marker + 1);
 
         printf("(%s) %s ", datatype, fieldname);
-
-        char new_value[NAME_SIZE] = {0};
 
         fgets(new_value, NAME_SIZE, stdin);
 
@@ -180,6 +180,50 @@ int insertInto(int* argc, char* argv[]){
     }
 
     fprintf(file, "%s\n", newline);
+    
     fclose(file);
     printf("Tupla adicionada com Sucesso à tabela %s\n", filename);
+}
+
+int deleteFromTable(int* argc, char* argv[]){
+    char filename[10 + NAME_SIZE + 5] = {0};
+    char line[256] = {0};
+
+    sprintf(filename, "database/%s.txt", argv[2]);
+
+    if(isTable(filename) == 0) return 0;
+
+    FILE *file;
+    if(!(file = fopen(filename, "r"))){
+        printf("Erro ao abrir arquivo da tabela %s\n", argv[2]);
+        return 1;
+    }
+
+    FILE *temp;
+    if(!(temp = fopen("temp.txt", "a"))){
+        printf("Erro ao criar arquivo temporário\n");
+        return 1;
+    }
+
+    while(fgets(line, 255, file) != NULL){
+        char string_pk[NAME_SIZE] = {0}; 
+        int i = 0;
+
+        while(line[i] != '|'){
+            string_pk[i] = line[i];
+            i++;
+        }
+
+        string_pk[i] = '\0';
+
+        if (atoi(argv[3]) == atoi(string_pk)) continue;
+
+        fprintf(temp, "%s", line);
+    }
+
+    fclose(file);
+    fclose(temp);
+
+    remove(filename);
+    rename("temp.txt", filename);
 }

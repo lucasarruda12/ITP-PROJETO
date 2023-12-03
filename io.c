@@ -13,7 +13,10 @@ void help(){
     printf("    l\n");
 
     printf("Criar uma nova tupla na tabela");
-    printf("    i\n")
+    printf("    i [TABELA]\n");
+
+    printf("Apagar uma tupla de uma tabela");
+    printf("    a [TABELA] [PRIMARY KEY]");
 
     printf("Apagar Tabela:\n");
     printf("    d [Nome da Tabela]\n");
