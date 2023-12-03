@@ -10,8 +10,21 @@ int main(int argc, char* argv[]){
         return 0;
     }
 
-    if (strcmp(argv[1], "-c") == 0){
-        createTable(&argc, argv);
+    switch (*argv[1]){
+    case 'l':
+        return listTables();
+        break;
+    case 'd':
+        return dropTable(argv[2]);
+        break;
+    case 'c':
+        return createTable(&argc, argv);
+        break;
+    case 'i':
+        return insertInto(&argc, argv);
+        break;
+    default:
+        help();
         return 0;
     }
 }

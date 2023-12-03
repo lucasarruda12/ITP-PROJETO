@@ -7,11 +7,14 @@ void help(){
     printf("Nomes de tabelas e colunas devem ter até %d caracteres\n\n", NAME_SIZE);
 
     printf("Criar Tabela:\n");
-    printf("    -c [Nome da Tabela] [Private Key] [DataType 1] [Coluna 1] [Datatype 2] [Coluna 2]...\n");
+    printf("    c [Nome da Tabela] [Private Key] [DataType 1] [Coluna 1] [Datatype 2] [Coluna 2]...\n");
 
     printf("Listar todas as tabelas:\n");
-    printf("    -l\n");
+    printf("    l\n");
 
     printf("Apagar Tabela:\n");
-    printf("    -d [Nome da Tabela]\n");
+    printf("    d [Nome da Tabela]\n");
+
+    printf("Interface de Texto:\n");
+    printf("    i\n");
 }
