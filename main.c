@@ -26,6 +26,12 @@ int main(int argc, char* argv[]){
     case 'a':
         return deleteFromTable(&argc, argv);
         break;
+    case 'u':
+        return listTableData(&argc, argv);
+        break;
+    case 'p':
+        return searchTable(&argc, argv);
+        break;
     default:
         help();
         return 0;

@@ -12,11 +12,17 @@ void help(){
     printf("Listar todas as tabelas:\n");
     printf("    l\n");
 
-    printf("Criar uma nova tupla na tabela");
+    printf("Criar uma nova tupla na tabela\n");
     printf("    i [TABELA]\n");
 
-    printf("Apagar uma tupla de uma tabela");
-    printf("    a [TABELA] [PRIMARY KEY]");
+    printf("Listar todos os dados de uma tabela:\n");
+    printf("    u [TABELA]\n");
+
+    printf("Pesquisar valores em uma tabela:\n");
+    printf("    p [TABELA]\n");
+
+    printf("Apagar uma tupla de uma tabela\n");
+    printf("    a [TABELA] [PRIMARY KEY]\n");
 
     printf("Apagar Tabela:\n");
     printf("    d [Nome da Tabela]\n");

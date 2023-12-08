@@ -227,3 +227,31 @@ int deleteFromTable(int* argc, char* argv[]){
     remove(filename);
     rename("temp.txt", filename);
 }
+
+int listTableData(int* argc, char* argv[]){
+    char filename[10 + NAME_SIZE + 5] = {0};
+    char line[256];
+
+    sprintf(filename, "database/%s.txt", argv[2]);
+
+    if(isTable(filename) == 0) return 0;
+
+    FILE *file;
+    if(!(file = fopen(filename, "r"))){
+        printf("Erro ao abrir arquivo da tabela %s\n", argv[2]);
+        return 1;
+    }
+
+    while(fgets(line, 255, file) != NULL){
+        printf("%s", line);
+    }
+}
+
+int searchTable(int* argc, char* argv[]){
+    char filename[10 + NAME_SIZE + 5] = {0};
+    char line[256];
+
+    sprintf(filename, "database/%s.txt", argv[2]);
+
+    if(isTable(filename) == 0) return 0;
+}
