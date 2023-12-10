@@ -2,6 +2,7 @@
 #include <string.h>
 #include <dirent.h>
 #include <stdlib.h>
+#include <math.h>
 
 #include "definitions.h"
 
@@ -28,6 +29,16 @@ int find_next_marker(char line[256], char marker){
     }
 
     return 0;
+}
+
+int compare_strings(char str1[], char str2[]){
+    int m = fmax(strlen(str1), strlen(str2));
+
+    for (int i = 0; i < m; i++){
+        if(str1[i] != str2[i]){
+            counter++
+        }
+    }
 }
 
 int createTable(int* argc, char* argv[]){
@@ -249,9 +260,123 @@ int listTableData(int* argc, char* argv[]){
 
 int searchTable(int* argc, char* argv[]){
     char filename[10 + NAME_SIZE + 5] = {0};
+    char tableheader[256] = {0};
     char line[256];
+
+    Column colunas[10] = {0};
 
     sprintf(filename, "database/%s.txt", argv[2]);
 
     if(isTable(filename) == 0) return 0;
+
+    FILE *file;
+    if(!(file = fopen(filename, "r"))){
+        printf("Erro ao abrir arquivo da tabela %s\n", argv[2]);
+        return 1;
+    }
+
+    fgets(tableheader, 255, file);
+    printf("Pesquisar por:\n");
+
+    int counter = 0;
+
+    while(strlen(tableheader) > 1){
+        int middle_marker = find_next_marker(tableheader, ')');
+        int end_marker = find_next_marker(tableheader, '|');
+        if (end_marker == 0) break;
+
+        strncpy(colunas[counter].datatype, tableheader + 1, middle_marker - 1);
+        strncpy(
+            colunas[counter].columnName,
+            tableheader + middle_marker + 1,
+            end_marker - middle_marker - 1
+        );
+        strcpy(tableheader, tableheader + end_marker + 1);
+
+        counter++;
+    }
+
+    int column_choice = 0;
+
+    for (int i = 0; i< counter; i++){
+        printf(
+            "%d -- (%s) %s\n",
+            i,
+            colunas[i].datatype, 
+            colunas[i].columnName
+        );
+    } 
+
+    scanf("%d", &column_choice);
+    getchar();
+
+    int method_choice = 0;
+
+    printf("Pesquisar valores:\n");
+    printf("0 -- Maiores que: \n");
+    printf("1 -- Maiores ou iguais a: \n");
+    printf("2 -- Iguais a: \n");
+    printf("3 -- Menores que: \n");
+    printf("4 -- Menores ou iguais a: \n");
+    printf("5 -- Próximos à (STRING): \n");
+
+    scanf("%d", &method_choice);
+    getchar();
+
+    printf("Valor: ");
+    char value[NAME_SIZE] = {0};
+    fgets(value, NAME_SIZE - 1, stdin);
+    value[strlen(value) - 1] = '\0';
+
+    while(fgets(line, 255, file) != NULL){
+        char line_copy[256];
+        strcpy(line_copy, line);
+
+        char *token = strtok(line_copy, "|");
+
+        for(int i = 0; i < column_choice; i++){
+            token = strtok(NULL, "|");
+        }
+
+        switch (method_choice) {
+        case 0:
+            if (atoi(token) > atoi(value)){
+                printf("%s", line);
+            }
+            break;
+        
+        case 1:
+            if (atoi(token) >= atoi(value)){
+                printf("%s", line);
+            }
+            break;
+        
+        case 2:
+            if (atoi(token) == atoi(value)){
+                printf("%s", line);
+            }
+            break;
+        
+        case 3:
+            if (atoi(token) < atoi(value)){
+                printf("%s", line);
+            }
+            break;
+
+        case 4:
+            if (atoi(token) <= atoi(value)){
+                printf("%s", line);
+            }
+            break;
+
+        case 5:
+            if (strcmp(value, token) < 5){
+                printf("%s", line);
+            }
+            break;
+
+        default:
+            break;
+        }
+    }
 }
