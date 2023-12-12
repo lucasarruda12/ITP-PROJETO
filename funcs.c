@@ -2,7 +2,6 @@
 #include <string.h>
 #include <dirent.h>
 #include <stdlib.h>
-#include <math.h>
 
 #include "definitions.h"
 
@@ -32,13 +31,16 @@ int find_next_marker(char line[256], char marker){
 }
 
 int compare_strings(char str1[], char str2[]){
-    int m = fmax(strlen(str1), strlen(str2));
+    int m = (strlen(str1) > strlen(str2)) ? strlen(str1) : strlen(str2);
+    int diff = 0;
 
     for (int i = 0; i < m; i++){
         if(str1[i] != str2[i]){
-            counter++
+            diff++;
         }
     }
+
+    return diff;
 }
 
 int createTable(int* argc, char* argv[]){
@@ -370,7 +372,7 @@ int searchTable(int* argc, char* argv[]){
             break;
 
         case 5:
-            if (strcmp(value, token) < 5){
+            if (compare_strings(value, token) < 5){
                 printf("%s", line);
             }
             break;
