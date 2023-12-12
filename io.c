@@ -26,7 +26,4 @@ void help(){
 
     printf("Apagar Tabela:\n");
     printf("    d [Nome da Tabela]\n");
-
-    printf("Interface de Texto:\n");
-    printf("    g\n");
 }

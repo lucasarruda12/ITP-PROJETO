@@ -5,7 +5,7 @@
 
 #include "definitions.h"
 
-int isTable(char filename[NAME_SIZE]){
+int is_table(char filename[NAME_SIZE]){
     FILE *file;
     
     if ((file = fopen(filename, "r")) == NULL)
@@ -20,9 +20,10 @@ int isTable(char filename[NAME_SIZE]){
     return 1;
 }
 
-int find_next_marker(char line[256], char marker){
+/* Retorna o índice do primeiro marker em string. */
+int find_next_marker(char string[256], char marker){
     for(int i = 0; i < 256; i++){
-        if(line[i] == marker){
+        if(string[i] == marker){
             return i;
         }
     }
@@ -30,12 +31,13 @@ int find_next_marker(char line[256], char marker){
     return 0;
 }
 
-int compare_strings(char str1[], char str2[]){
-    int m = (strlen(str1) > strlen(str2)) ? strlen(str1) : strlen(str2);
+/* Retorna a quantidade de diferenças entre string_a e string_b. */
+int compare_strings(char string_a[], char string_b[]){
+    int max = (strlen(string_a) < strlen(string_b)) ? strlen(string_a) : strlen(string_b);
     int diff = 0;
 
-    for (int i = 0; i < m; i++){
-        if(str1[i] != str2[i]){
+    for (int i = 0; i < max; i++){
+        if(string_a[i] != string_b[i]){
             diff++;
         }
     }
@@ -43,9 +45,10 @@ int compare_strings(char str1[], char str2[]){
     return diff;
 }
 
+/* Cria tabela a partir de argumentos da main */
 int createTable(int* argc, char* argv[]){
     char filename[10 + NAME_SIZE + 5];
-    char tableheader[255] = {0};
+    char tableheader[256] = {0};
 
     sprintf(filename, "database/%s.txt", argv[2]);
 
@@ -57,7 +60,7 @@ int createTable(int* argc, char* argv[]){
         return 1;
     }
 
-     // PRIVATE KEY
+    // PRIVATE KEY
     strcat(tableheader, "(int)");
     strcat(tableheader, argv[3]);
     strcat(tableheader, "/;");
@@ -82,9 +85,11 @@ int createTable(int* argc, char* argv[]){
     return 0;
 }
 
+/* Listar tabelas */
 int listTables(){
     DIR *directory;
     struct dirent *entry;
+
     char tablename[NAME_SIZE + 1];
 
     directory = opendir("database");
@@ -112,9 +117,11 @@ int listTables(){
     return 0;
 }
 
-int dropTable(char tablename[NAME_SIZE + 1]){
+
+/* Apagar a tabela table */
+int dropTable(char table[NAME_SIZE + 1]){
     char filename[10 + NAME_SIZE + 5];
-    sprintf(filename, "database/%s.txt", tablename);
+    sprintf(filename, "database/%s.txt", table);
 
     if(remove(filename) == 0){
         printf("Tabela %s apagada com sucesso.\n", filename);
@@ -125,6 +132,8 @@ int dropTable(char tablename[NAME_SIZE + 1]){
     }
 }
 
+
+// FICOU GAMBIARRENTA. AJEITAR!!!
 int insertInto(int* argc, char* argv[]){
     char line[256] = {0};
     char tableheader[256] = {0};
@@ -134,7 +143,7 @@ int insertInto(int* argc, char* argv[]){
     
     sprintf(filename, "database/%s.txt", argv[2]);
 
-    if(isTable(filename) == 0) return 0;
+    if(is_table(filename) == 0) return 0;
 
     FILE *file;
     if(!(file = fopen(filename, "r"))){
@@ -165,8 +174,14 @@ int insertInto(int* argc, char* argv[]){
         }
     }
 
+    char string_pk[10] = {0};
+    sprintf(string_pk, "%d", pk);
+    strncat(newline, string_pk, pk - 1);
+    strcat(newline, "|");
+
     fclose(file);
 
+    int counter = 0;
     while(strlen(tableheader) > 1){
         char datatype[15] = {0};
         char fieldname[45] = {0};
@@ -178,13 +193,17 @@ int insertInto(int* argc, char* argv[]){
         strncpy(datatype, tableheader + 1, middle_marker - 1);
         strncpy(fieldname, tableheader + middle_marker + 1, end_marker - middle_marker - 1);
         strcpy(tableheader, tableheader + end_marker + 1);
+        
+        if(counter > 0){
+            printf("(%s) %s: ", datatype, fieldname);
 
-        printf("(%s) %s ", datatype, fieldname);
+            fgets(new_value, NAME_SIZE, stdin);
 
-        fgets(new_value, NAME_SIZE, stdin);
+            strncat(newline, new_value, strlen(new_value) - 1);
+            strcat(newline, "|");
+        }
 
-        strncat(newline, new_value, strlen(new_value) - 1);
-        strcat(newline, "|");
+        counter++;
     }
 
     if(!(file = fopen(filename, "a"))){
@@ -204,7 +223,7 @@ int deleteFromTable(int* argc, char* argv[]){
 
     sprintf(filename, "database/%s.txt", argv[2]);
 
-    if(isTable(filename) == 0) return 0;
+    if(is_table(filename) == 0) return 0;
 
     FILE *file;
     if(!(file = fopen(filename, "r"))){
@@ -247,7 +266,7 @@ int listTableData(int* argc, char* argv[]){
 
     sprintf(filename, "database/%s.txt", argv[2]);
 
-    if(isTable(filename) == 0) return 0;
+    if(is_table(filename) == 0) return 0;
 
     FILE *file;
     if(!(file = fopen(filename, "r"))){
@@ -269,7 +288,7 @@ int searchTable(int* argc, char* argv[]){
 
     sprintf(filename, "database/%s.txt", argv[2]);
 
-    if(isTable(filename) == 0) return 0;
+    if(is_table(filename) == 0) return 0;
 
     FILE *file;
     if(!(file = fopen(filename, "r"))){
@@ -372,7 +391,7 @@ int searchTable(int* argc, char* argv[]){
             break;
 
         case 5:
-            if (compare_strings(value, token) < 5){
+            if (compare_strings(value, token) < 2){
                 printf("%s", line);
             }
             break;
