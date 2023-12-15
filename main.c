@@ -11,29 +11,29 @@ int main(int argc, char* argv[]){
     }
 
     switch (*argv[1]){
-    case 'l':
-        return listTables();
-        break;
-    case 'd':
-        return dropTable(argv[2]);
-        break;
-    case 'c':
-        return createTable(&argc, argv);
-        break;
-    case 'i':
-        return insertInto(&argc, argv);
-        break;
-    case 'a':
-        return deleteFromTable(&argc, argv);
-        break;
-    case 'u':
-        return listTableData(&argc, argv);
-        break;
-    case 'p':
-        return searchTable(&argc, argv);
-        break;
-    default:
-        help();
-        return 0;
+        case 'l':
+            return listTables();
+            break;
+        case 'd':
+            return dropTable(argv[2]);
+            break;
+        case 'c':
+            return createTable(&argc, argv);
+            break;
+        case 'i':
+            return insertInto(&argc, argv);
+            break;
+        case 'a':
+            return deleteFromTable(&argc, argv);
+            break;
+        case 'u':
+            return listTableData(&argc, argv);
+            break;
+        case 'p':
+            return searchTable(&argc, argv);
+            break;
+        default:
+            help();
+            return 0;
     }
 }
